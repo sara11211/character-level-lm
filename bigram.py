@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 from torch.nn import functional as F
+import matplotlib.pyplot as plt
 
 # hyperparameters
 batch_size = 32 # how many independent sequences will we process in parallel?
@@ -21,7 +22,7 @@ top_k = 20
 torch.manual_seed(1337)
 
 # Open the Victor Hugo dataset file
-with open('victor_hugo-texts.txt', 'r', encoding='utf-8') as f:
+with open('data/victor_hugo-texts.txt', 'r', encoding='utf-8') as f:
     text = f.read()
 
 # Extract unique characters from the dataset
@@ -226,11 +227,21 @@ print(sum(p.numel() for p in m.parameters())/1e6, 'M parameters')
 # Create a PyTorch optimizer
 optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate)
 
+# For plotting loss curves
+train_losses = []
+val_losses = []
+steps = []
+
 for iter in range(max_iters):
 
     # Every once in a while evaluate the loss on train and val sets
     if iter % eval_interval == 0 or iter == max_iters - 1:
         losses = estimate_loss()
+        # Append the losses to the lists for plotting
+        train_losses.append(losses["train"])
+        val_losses.append(losses["val"])
+        steps.append(iter)
+        # Print the current losses
         print(f"step {iter}: train loss {losses['train']:.4f}, val loss {losses['val']:.4f}")
 
     # Sample a batch of data
@@ -241,6 +252,21 @@ for iter in range(max_iters):
     optimizer.zero_grad(set_to_none=True)
     loss.backward()
     optimizer.step()
+
+# Plot the training and validation loss curves
+plt.figure()
+plt.plot(steps, train_losses, label="Train Loss")
+plt.plot(steps, val_losses, label="Validation Loss")
+
+plt.xlabel("Training Step")
+plt.ylabel("Loss")
+plt.legend()
+plt.title("Training and Validation Loss")
+
+# Save the plot as an image 
+plt.grid(True)
+plt.savefig("results/loss_plot.png")
+plt.show()
 
 # Generate from the model
 context = torch.zeros((1, 1), dtype=torch.long, device=device)
