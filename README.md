@@ -1,10 +1,6 @@
 # Character-Level Language Model
 
-Implementation of a small character-level language model from scratch in PyTorch, trained on Victor Hugo's French texts.
-
-## Overview
-
-This project builds a decoder-only Transformer trained to generate text character by character, mimicking Victor Hugo's writing style. The architecture follows the original "Attention Is All You Need" paper, with modern improvements such as residual connections and pre-layer normalization from the "On Layer Normalization in the Transformer Architecture" paper.
+This project builds a decoder-only Transformer trained to generate text character by character, mimicking Victor Hugo's writing style. The architecture follows the original "Attention Is All You Need" paper, with improvements such as residual connections and pre-layer normalization from the "On Layer Normalization in the Transformer Architecture" paper.
 
 ## Architecture
 
@@ -15,14 +11,6 @@ The model is a stack of Transformer blocks, each combining a multi-head causal s
 - **Depth**: 6 Transformer blocks
 - **Embedding dimension**: 128
 - **Regularization**: dropout (0.2) on attention weights and feed-forward activations
-- **Normalization**: pre-LayerNorm before each sub-layer
-
-## Generation
-
-Text is sampled autoregressively. Two sampling controls are applied at inference time to balance creativity and coherence:
-
-- **Temperature** (0.8): scales logits before softmax.
-- **Top-K** (20): restricts sampling to the 20 most probable next characters at each step.
 
 ## Training
 
@@ -36,10 +24,6 @@ Text is sampled autoregressively. Two sampling controls are applied at inference
 | Train / val split | 90% / 10% |
 
 Loss is tracked every 100 steps on both the training and validation sets.
-
-## Loss Curves
-
-![Loss Curves](results/loss_plot.png)
 
 ## Sample Output
 
