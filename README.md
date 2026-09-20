@@ -50,7 +50,7 @@ De le ténèbre et rêve, La forte !
 
 ## Usage
 
-Place your training data at `data/victor_hugo-texts.txt`, then run:
+Run:
 ```bash
 python model.py
 ```
